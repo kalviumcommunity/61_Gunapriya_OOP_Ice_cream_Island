@@ -1,5 +1,6 @@
 import java.util.Scanner;
 
+// IceCream.java
 class IceCream {
     private String flavor;
     private String size;
@@ -7,14 +8,14 @@ class IceCream {
 
     // Constructor
     public IceCream(String iceCreamFlavor, String iceCreamSize) {
-        flavor = iceCreamFlavor;
-        size = iceCreamSize;
-        cost = calculateCost();
+        this.flavor = iceCreamFlavor;
+        this.size = iceCreamSize;
+        this.cost = this.calculateCost();
     }
 
     // Method to calculate the cost of the ice cream based on size
     private double calculateCost() {
-        switch (size.toLowerCase()) {
+        switch (this.size.toLowerCase()) {
             case "small":
                 return 3.00;
             case "medium":
@@ -28,32 +29,30 @@ class IceCream {
 
     // Method to describe the ice cream
     public void describe() {
-        System.out.println("This is a " + size + " " + flavor + " ice cream costing $" + cost + ".");
+        System.out.println("This is a " + this.size + " " + this.flavor + " ice cream costing $" + this.cost + ".");
     }
 
     // Method to change the flavor of the ice cream
     public void changeFlavor(String newFlavor) {
-        flavor = newFlavor;
+        this.flavor = newFlavor;
         System.out.println("Flavor changed to " + newFlavor + ".");
     }
 
     // Method to get the flavor of the ice cream
     public String getFlavor() {
-        return flavor;
+        return this.flavor;
     }
 
     // Method to get the size of the ice cream
     public String getSize() {
-        return size;
+        return this.size;
     }
 
     // Method to get the cost of the ice cream
     public double getCost() {
-        return cost;
+        return this.cost;
     }
 }
-
-// Topping.java
 class Topping {
     private String toppingName;
     private boolean isAdded;
@@ -61,44 +60,44 @@ class Topping {
 
     // Constructor
     public Topping(String name) {
-        toppingName = name;
-        isAdded = false; // By default, topping is not added
-        cost = 1.50; // Fixed cost for each topping
+        this.toppingName = name;
+        this.isAdded = false; // By default, topping is not added
+        this.cost = 1.50; // Fixed cost for each topping
     }
 
     // Method to add the topping to the ice cream
     public void addTopping() {
-        if (!isAdded) {
-            isAdded = true;
-            System.out.println(toppingName + " added to the ice cream for $" + cost + ".");
+        if (!this.isAdded) {
+            this.isAdded = true;
+            System.out.println(this.toppingName + " added to the ice cream for $" + this.cost + ".");
         } else {
-            System.out.println(toppingName + " is already added.");
+            System.out.println(this.toppingName + " is already added.");
         }
     }
 
     // Method to remove the topping from the ice cream
     public void removeTopping() {
-        if (isAdded) {
-            isAdded = false;
-            System.out.println(toppingName + " removed from the ice cream.");
+        if (this.isAdded) {
+            this.isAdded = false;
+            System.out.println(this.toppingName + " removed from the ice cream.");
         } else {
-            System.out.println(toppingName + " is not added yet.");
+            System.out.println(this.toppingName + " is not added yet.");
         }
     }
 
     // Method to check if the topping is added
     public boolean isAdded() {
-        return isAdded;
+        return this.isAdded;
     }
 
     // Method to get the topping name
     public String getToppingName() {
-        return toppingName;
+        return this.toppingName;
     }
 
     // Method to get the cost of the topping
     public double getCost() {
-        return isAdded ? cost : 0.00;
+        return this.isAdded ? this.cost : 0.00;
     }
 }
 
@@ -164,7 +163,7 @@ public class IceCreamIsland {
         if (topping2.isAdded()) {
             System.out.println("- " + topping2.getToppingName());
         }
-        System.out.println("Total Cost: $" + totalCost);
+        System.out.println("Total Cost: Rs" + totalCost);
         System.out.println("\nYour order has been placed!");
 
         scanner.close();
