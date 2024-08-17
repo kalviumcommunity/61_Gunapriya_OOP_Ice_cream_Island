@@ -1,7 +1,10 @@
+
 import java.util.Scanner;
+import java.util.InputMismatchException;
 
 // IceCream.java
 class IceCream {
+
     private String flavor;
     private String size;
     private double cost;
@@ -53,7 +56,10 @@ class IceCream {
         return this.cost;
     }
 }
+
+// Topping.java
 class Topping {
+
     private String toppingName;
     private boolean isAdded;
     private double cost;
@@ -103,6 +109,7 @@ class Topping {
 
 // IceCreamIsland.java
 public class IceCreamIsland {
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
@@ -116,16 +123,32 @@ public class IceCreamIsland {
         IceCream myIceCream = new IceCream(flavor, size);
         myIceCream.describe();
 
-        // Get topping details from the user
-        System.out.print("Enter a topping to add: ");
-        String toppingName1 = scanner.nextLine();
-        Topping topping1 = new Topping(toppingName1);
-        topping1.addTopping();
+        // Initialize topping count
+        int toppingCount = 0;
 
-        System.out.print("Enter another topping to add: ");
-        String toppingName2 = scanner.nextLine();
-        Topping topping2 = new Topping(toppingName2);
-        topping2.addTopping();
+        // Get the number of toppings the user wants to add with input validation
+        while (true) {
+            try {
+                System.out.print("How many toppings would you like to add? ");
+                toppingCount = scanner.nextInt();
+                scanner.nextLine(); // Consume the newline
+                break; // Exit the loop if input is valid
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a number.");
+                scanner.nextLine(); // Clear the invalid input
+            }
+        }
+
+        // Array of Topping objects
+        Topping[] toppings = new Topping[toppingCount];
+
+        // Get topping details from the user
+        for (int i = 0; i < toppingCount; i++) {
+            System.out.print("Enter topping " + (i + 1) + ": ");
+            String toppingName = scanner.nextLine();
+            toppings[i] = new Topping(toppingName); // Create and store Topping objects in the array
+            toppings[i].addTopping();
+        }
 
         // Ask if the user wants to change the flavor
         System.out.print("Do you want to change the flavor? (yes/no): ");
@@ -140,28 +163,31 @@ public class IceCreamIsland {
         System.out.print("Do you want to remove any topping? (yes/no): ");
         String removeTopping = scanner.nextLine();
         if (removeTopping.equalsIgnoreCase("yes")) {
-            System.out.print("Which topping do you want to remove: " + toppingName1 + " or " + toppingName2 + "? ");
+            System.out.print("Which topping do you want to remove? ");
             String toppingToRemove = scanner.nextLine();
-            if (toppingToRemove.equalsIgnoreCase(toppingName1)) {
-                topping1.removeTopping();
-            } else if (toppingToRemove.equalsIgnoreCase(toppingName2)) {
-                topping2.removeTopping();
+            for (Topping topping : toppings) {
+                if (topping.getToppingName().equalsIgnoreCase(toppingToRemove)) {
+                    topping.removeTopping();
+                    break;
+                }
             }
         }
 
         // Calculate the total cost
-        double totalCost = myIceCream.getCost() + topping1.getCost() + topping2.getCost();
+        double totalCost = myIceCream.getCost();
+        for (Topping topping : toppings) {
+            totalCost += topping.getCost(); // Sum the costs of all added toppings
+        }
 
         // Display final order summary
         System.out.println("\nOrder Summary:");
         System.out.println("Flavor: " + myIceCream.getFlavor());
         System.out.println("Size: " + myIceCream.getSize());
         System.out.println("Toppings:");
-        if (topping1.isAdded()) {
-            System.out.println("- " + topping1.getToppingName());
-        }
-        if (topping2.isAdded()) {
-            System.out.println("- " + topping2.getToppingName());
+        for (Topping topping : toppings) {
+            if (topping.isAdded()) {
+                System.out.println("- " + topping.getToppingName());
+            }
         }
         System.out.println("Total Cost: Rs" + totalCost);
         System.out.println("\nYour order has been placed!");
