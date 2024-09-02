@@ -1,6 +1,5 @@
-
-import java.util.Scanner;
 import java.util.InputMismatchException;
+import java.util.Scanner;
 
 // IceCream.java
 class IceCream {
@@ -32,7 +31,7 @@ class IceCream {
 
     // Method to describe the ice cream
     public void describe() {
-        System.out.println("This is a " + this.size + " " + this.flavor + " ice cream costing $" + this.cost + ".");
+        System.out.println("This is a " + this.size + " " + this.flavor + " ice cream costing Rs" + this.cost + ".");
     }
 
     // Method to change the flavor of the ice cream
@@ -75,7 +74,7 @@ class Topping {
     public void addTopping() {
         if (!this.isAdded) {
             this.isAdded = true;
-            System.out.println(this.toppingName + " added to the ice cream for $" + this.cost + ".");
+            System.out.println(this.toppingName + " added to the ice cream for Rs" + this.cost + ".");
         } else {
             System.out.println(this.toppingName + " is already added.");
         }
@@ -107,11 +106,57 @@ class Topping {
     }
 }
 
+// Customer.java
+class Customer {
+
+    private String name;
+    private int loyaltyPoints;
+
+    // Constructor
+    public Customer(String name) {
+        this.name = name;
+        this.loyaltyPoints = 0; // Start with 0 loyalty points
+    }
+
+    // Method to add loyalty points
+    public void addPoints(int points) {
+        this.loyaltyPoints += points;
+        System.out.println(points + " loyalty points added. Total points: " + this.loyaltyPoints);
+    }
+
+    // Method to redeem loyalty points for a discount
+    public boolean redeemPoints(int points) {
+        if (points <= this.loyaltyPoints) {
+            this.loyaltyPoints -= points;
+            System.out.println(points + " points redeemed. Remaining points: " + this.loyaltyPoints);
+            return true;
+        } else {
+            System.out.println("Insufficient loyalty points.");
+            return false;
+        }
+    }
+
+    // Method to get the current loyalty points
+    public int getPoints() {
+        return this.loyaltyPoints;
+    }
+
+    // Method to get the customer's name
+    public String getName() {
+        return this.name;
+    }
+}
+
 // IceCreamIsland.java
 public class IceCreamIsland {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+
+        // Get customer name
+        System.out.print("Enter your name: ");
+        String customerName = scanner.nextLine();
+        Customer customer = new Customer(customerName); // Create Customer object
 
         // Get ice cream flavor and size from the user
         System.out.print("Enter the flavor of the ice cream: ");
@@ -179,8 +224,27 @@ public class IceCreamIsland {
             totalCost += topping.getCost(); // Sum the costs of all added toppings
         }
 
+        // Calculate and add loyalty points based on total cost
+        int earnedPoints = (int) (totalCost / 10); // 1 point for every Rs10 spent
+        customer.addPoints(earnedPoints); // Add points to the customer's account
+
+        // Ask if the user wants to redeem loyalty points
+        System.out.print("Do you want to redeem loyalty points? (yes/no): ");
+        String redeemChoice = scanner.nextLine();
+        double discount = 0.0;
+        if (redeemChoice.equalsIgnoreCase("yes")) {
+            System.out.print("Enter points to redeem: ");
+            int pointsToRedeem = scanner.nextInt();
+            scanner.nextLine(); // Consume the newline
+            if (customer.redeemPoints(pointsToRedeem)) {
+                discount = pointsToRedeem; // Each point is worth Rs1 discount
+                totalCost -= discount; // Apply discount to total cost
+            }
+        }
+
         // Display final order summary
         System.out.println("\nOrder Summary:");
+        System.out.println("Customer: " + customer.getName());
         System.out.println("Flavor: " + myIceCream.getFlavor());
         System.out.println("Size: " + myIceCream.getSize());
         System.out.println("Toppings:");
@@ -189,7 +253,9 @@ public class IceCreamIsland {
                 System.out.println("- " + topping.getToppingName());
             }
         }
+        System.out.println("Discount: Rs" + discount);
         System.out.println("Total Cost: Rs" + totalCost);
+        System.out.println("Loyalty Points Balance: " + customer.getPoints());
         System.out.println("\nYour order has been placed!");
 
         scanner.close();
