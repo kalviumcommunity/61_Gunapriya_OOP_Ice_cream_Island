@@ -7,12 +7,15 @@ class IceCream {
     private String flavor;
     private String size;
     private double cost;
+    // Static variable to track the total number of ice creams sold
+    private static int totalIceCreamsSold = 0;
 
     // Constructor
     public IceCream(String iceCreamFlavor, String iceCreamSize) {
         this.flavor = iceCreamFlavor;
         this.size = iceCreamSize;
         this.cost = this.calculateCost();
+        totalIceCreamsSold++; // Increment the count whenever a new ice cream is created
     }
 
     // Method to calculate the cost of the ice cream based on size
@@ -53,6 +56,11 @@ class IceCream {
     // Method to get the cost of the ice cream
     public double getCost() {
         return this.cost;
+    }
+
+    // Static method to get the total ice creams sold
+    public static int getTotalIceCreamsSold() {
+        return totalIceCreamsSold;
     }
 }
 
@@ -111,6 +119,8 @@ class Customer {
 
     private String name;
     private int loyaltyPoints;
+    // Static variable to track the total loyalty points redeemed
+    private static int totalLoyaltyPointsRedeemed = 0;
 
     // Constructor
     public Customer(String name) {
@@ -128,6 +138,7 @@ class Customer {
     public boolean redeemPoints(int points) {
         if (points <= this.loyaltyPoints) {
             this.loyaltyPoints -= points;
+            totalLoyaltyPointsRedeemed += points; // Increment total points redeemed
             System.out.println(points + " points redeemed. Remaining points: " + this.loyaltyPoints);
             return true;
         } else {
@@ -144,6 +155,11 @@ class Customer {
     // Method to get the customer's name
     public String getName() {
         return this.name;
+    }
+
+    // Static method to get the total loyalty points redeemed
+    public static int getTotalLoyaltyPointsRedeemed() {
+        return totalLoyaltyPointsRedeemed;
     }
 }
 
@@ -245,19 +261,23 @@ public class IceCreamIsland {
         // Display final order summary
         System.out.println("\nOrder Summary:");
         System.out.println("Customer: " + customer.getName());
-        System.out.println("Flavor: " + myIceCream.getFlavor());
-        System.out.println("Size: " + myIceCream.getSize());
-        System.out.println("Toppings:");
+        System.out.println("Ice Cream: " + myIceCream.getFlavor() + " (" + myIceCream.getSize() + ")");
+        System.out.print("Toppings: ");
         for (Topping topping : toppings) {
             if (topping.isAdded()) {
-                System.out.println("- " + topping.getToppingName());
+                System.out.print(topping.getToppingName() + " ");
             }
         }
-        System.out.println("Discount: Rs" + discount);
-        System.out.println("Total Cost: Rs" + totalCost);
-        System.out.println("Loyalty Points Balance: " + customer.getPoints());
-        System.out.println("\nYour order has been placed!");
+        System.out.println("\nTotal Cost: Rs" + totalCost);
+        System.out.println("Loyalty Points Earned: " + earnedPoints);
+        System.out.println("Discount Applied: Rs" + discount);
+        System.out.println("Thank you for your purchase!");
 
-        scanner.close();
+        // Display total ice creams sold and total loyalty points redeemed
+        System.out.println("\nStatistics:");
+        System.out.println("Total Ice Creams Sold: " + IceCream.getTotalIceCreamsSold());
+        System.out.println("Total Loyalty Points Redeemed: " + Customer.getTotalLoyaltyPointsRedeemed());
+
+        scanner.close(); // Close the scanner to free resources
     }
 }
