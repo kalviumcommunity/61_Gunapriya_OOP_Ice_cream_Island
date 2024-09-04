@@ -15,7 +15,8 @@ class IceCream {
         this.flavor = iceCreamFlavor;
         this.size = iceCreamSize;
         this.cost = this.calculateCost();
-        totalIceCreamsSold++; // Increment the count whenever a new ice cream is created
+        // Increment the count whenever a new ice cream is created
+        totalIceCreamsSold++; 
     }
 
     // Method to calculate the cost of the ice cream based on size
@@ -59,6 +60,7 @@ class IceCream {
     }
 
     // Static method to get the total ice creams sold
+    // Can be called without creating an instance of IceCream
     public static int getTotalIceCreamsSold() {
         return totalIceCreamsSold;
     }
@@ -138,7 +140,8 @@ class Customer {
     public boolean redeemPoints(int points) {
         if (points <= this.loyaltyPoints) {
             this.loyaltyPoints -= points;
-            totalLoyaltyPointsRedeemed += points; // Increment total points redeemed
+            // Increment total points redeemed
+            totalLoyaltyPointsRedeemed += points; 
             System.out.println(points + " points redeemed. Remaining points: " + this.loyaltyPoints);
             return true;
         } else {
@@ -158,6 +161,7 @@ class Customer {
     }
 
     // Static method to get the total loyalty points redeemed
+    // Can be called without creating an instance of Customer
     public static int getTotalLoyaltyPointsRedeemed() {
         return totalLoyaltyPointsRedeemed;
     }
@@ -268,16 +272,15 @@ public class IceCreamIsland {
                 System.out.print(topping.getToppingName() + " ");
             }
         }
-        System.out.println("\nTotal Cost: Rs" + totalCost);
+        System.out.println();
+        System.out.println("Total Cost: Rs" + totalCost);
         System.out.println("Loyalty Points Earned: " + earnedPoints);
         System.out.println("Discount Applied: Rs" + discount);
-        System.out.println("Thank you for your purchase!");
 
-        // Display total ice creams sold and total loyalty points redeemed
-        System.out.println("\nStatistics:");
+        // Show static data: total ice creams sold and total loyalty points redeemed
         System.out.println("Total Ice Creams Sold: " + IceCream.getTotalIceCreamsSold());
         System.out.println("Total Loyalty Points Redeemed: " + Customer.getTotalLoyaltyPointsRedeemed());
 
-        scanner.close(); // Close the scanner to free resources
+        scanner.close();
     }
 }
