@@ -6,10 +6,10 @@ public class IceCreamIsland {
     // IceCream class
     static class IceCream {
 
-        private String flavor;
-        private String size;
-        private double cost;
-        private static int totalIceCreamsSold = 0;
+        private String flavor;   // private access: restricted to this class
+        private String size;     // private access: restricted to this class
+        private double cost;     // private access: restricted to this class
+        private static int totalIceCreamsSold = 0; // private as it's related to internal management
 
         // Constructor
         public IceCream(String iceCreamFlavor, String iceCreamSize) {
@@ -19,12 +19,12 @@ public class IceCreamIsland {
             totalIceCreamsSold++;
         }
 
-        // Getter (Accessor) for flavor
+        // Getter (Accessor) for flavor - public to allow access outside class
         public String getFlavor() {
             return this.flavor;
         }
 
-        // Setter (Mutator) for flavor
+        // Setter (Mutator) for flavor - public to allow access outside class
         public void setFlavor(String flavor) {
             this.flavor = flavor;
             this.cost = this.calculateCost(); // Update cost based on flavor change
@@ -41,7 +41,7 @@ public class IceCreamIsland {
             this.cost = this.calculateCost(); // Update cost based on size change
         }
 
-        // Getter (Accessor) for cost
+        // Getter (Accessor) for cost - public to allow reading cost
         public double getCost() {
             return this.cost;
         }
@@ -51,7 +51,7 @@ public class IceCreamIsland {
             return totalIceCreamsSold;
         }
 
-        // Private method to calculate cost based on size
+        // Private method to calculate cost based on size - no need for public exposure
         private double calculateCost() {
             switch (this.size.toLowerCase()) {
                 case "small":
@@ -74,9 +74,9 @@ public class IceCreamIsland {
     // Topping class
     static class Topping {
 
-        private String toppingName;
-        private boolean isAdded;
-        private double cost;
+        private String toppingName;  // private access to internal field
+        protected boolean isAdded;   // protected to allow access in subclasses
+        private double cost;         // private as it's related to internal calculation
 
         // Constructor
         public Topping(String name) {
@@ -85,7 +85,7 @@ public class IceCreamIsland {
             this.cost = 1.50;
         }
 
-        // Getter (Accessor) for topping name
+        // Getter (Accessor) for topping name - public to allow outside access
         public String getToppingName() {
             return this.toppingName;
         }
@@ -112,7 +112,7 @@ public class IceCreamIsland {
             System.out.println(this.toppingName + " removed from the ice cream.");
         }
 
-        // Getter (Accessor) for topping cost
+        // Getter (Accessor) for topping cost - public to allow access
         public double getCost() {
             return this.isAdded ? this.cost : 0.00;
         }
@@ -121,9 +121,9 @@ public class IceCreamIsland {
     // Customer class
     static class Customer {
 
-        private String name;
-        private int loyaltyPoints;
-        private static int totalLoyaltyPointsRedeemed = 0;
+        private String name;        // private as customer name should only be modified via methods
+        protected int loyaltyPoints; // protected as subclasses may access it
+        private static int totalLoyaltyPointsRedeemed = 0;  // private as it relates to internal tracking
 
         // Constructor
         public Customer(String name) {
@@ -267,14 +267,10 @@ public class IceCreamIsland {
                 System.out.print(topping.getToppingName() + " ");
             }
         }
-        System.out.println();
-        System.out.println("Total Cost: Rs" + totalCost);
-        System.out.println("Loyalty Points Earned: " + earnedPoints);
+        System.out.println("\nTotal Cost: Rs" + totalCost);
         System.out.println("Discount Applied: Rs" + discount);
-
-        // Show static data
-        System.out.println("Total Ice Creams Sold: " + IceCream.getTotalIceCreamsSold());
         System.out.println("Total Loyalty Points Redeemed: " + Customer.getTotalLoyaltyPointsRedeemed());
+        System.out.println("Total Ice Creams Sold: " + IceCream.getTotalIceCreamsSold());
 
         scanner.close();
     }
