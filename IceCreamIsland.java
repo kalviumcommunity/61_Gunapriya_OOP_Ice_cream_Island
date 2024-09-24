@@ -5,18 +5,22 @@ public class IceCreamIsland {
 
     // IceCream class
     static class IceCream {
-
         private String flavor;   // private access: restricted to this class
         private String size;     // private access: restricted to this class
         private double cost;     // private access: restricted to this class
         private static int totalIceCreamsSold = 0; // private as it's related to internal management
 
-        // Constructor
+        // Constructor with flavor and size
         public IceCream(String iceCreamFlavor, String iceCreamSize) {
             this.flavor = iceCreamFlavor;
             this.size = iceCreamSize;
             this.cost = this.calculateCost();
             totalIceCreamsSold++;
+        }
+
+        // Overloaded constructor with only flavor (default size set to medium)
+        public IceCream(String iceCreamFlavor) {
+            this(iceCreamFlavor, "Medium");
         }
 
         // Getter (Accessor) for flavor - public to allow access outside class
@@ -73,7 +77,6 @@ public class IceCreamIsland {
 
     // Topping class
     static class Topping {
-
         private String toppingName;  // private access to internal field
         protected boolean isAdded;   // protected to allow access in subclasses
         private double cost;         // private as it's related to internal calculation
@@ -120,7 +123,6 @@ public class IceCreamIsland {
 
     // Customer class
     static class Customer {
-
         private String name;        // private as customer name should only be modified via methods
         protected int loyaltyPoints; // protected as subclasses may access it
         private static int totalLoyaltyPointsRedeemed = 0;  // private as it relates to internal tracking
@@ -261,16 +263,16 @@ public class IceCreamIsland {
         System.out.println("\nOrder Summary:");
         System.out.println("Customer: " + customer.getName());
         System.out.println("Ice Cream: " + myIceCream.getFlavor() + " (" + myIceCream.getSize() + ")");
-        System.out.print("Toppings: ");
+        System.out.println("Toppings:");
         for (Topping topping : toppings) {
             if (topping.isAdded()) {
-                System.out.print(topping.getToppingName() + " ");
+                System.out.println("- " + topping.getToppingName());
             }
         }
-        System.out.println("\nTotal Cost: Rs" + totalCost);
-        System.out.println("Discount Applied: Rs" + discount);
-        System.out.println("Total Loyalty Points Redeemed: " + Customer.getTotalLoyaltyPointsRedeemed());
+        System.out.println("Total Cost: Rs" + totalCost);
+        System.out.println("Discount from Loyalty Points: Rs" + discount);
         System.out.println("Total Ice Creams Sold: " + IceCream.getTotalIceCreamsSold());
+        System.out.println("Total Loyalty Points Redeemed: " + Customer.getTotalLoyaltyPointsRedeemed());
 
         scanner.close();
     }
