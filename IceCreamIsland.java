@@ -8,7 +8,7 @@ public class IceCreamIsland {
         private String flavor;   // private access: restricted to this class
         private String size;     // private access: restricted to this class
         private double cost;     // private access: restricted to this class
-        private static int totalIceCreamsSold = 0; // private as it's related to internal management
+        private static int totalIceCreamsSold = 0; 
 
         // Constructor with flavor and size
         public IceCream(String iceCreamFlavor, String iceCreamSize) {
@@ -75,6 +75,24 @@ public class IceCreamIsland {
         }
     }
 
+    // SpecialIceCream class that inherits IceCream
+    static class SpecialIceCream extends IceCream {
+        private String premiumTopping; // new field for special topping
+
+        // Constructor for special ice cream with topping
+        public SpecialIceCream(String flavor, String size, String premiumTopping) {
+            super(flavor, size); // calling parent constructor
+            this.premiumTopping = premiumTopping;
+        }
+
+        // Method to describe the special ice cream
+        @Override
+        public void describe() {
+            super.describe();
+            System.out.println("It comes with a premium topping of " + this.premiumTopping + ".");
+        }
+    }
+
     // Topping class
     static class Topping {
         private String toppingName;  // private access to internal field
@@ -118,6 +136,30 @@ public class IceCreamIsland {
         // Getter (Accessor) for topping cost - public to allow access
         public double getCost() {
             return this.isAdded ? this.cost : 0.00;
+        }
+    }
+
+    // PremiumTopping class that inherits Topping
+    static class PremiumTopping extends Topping {
+        private double premiumCost; // additional cost for premium toppings
+
+        // Constructor for premium topping
+        public PremiumTopping(String name) {
+            super(name);
+            this.premiumCost = 3.00; // Premium toppings cost more
+        }
+
+        // Overridden method to add premium topping
+        @Override
+        public void addTopping() {
+            this.isAdded = true;
+            System.out.println(this.getToppingName() + " (premium) added to the ice cream for Rs" + this.premiumCost + ".");
+        }
+
+        // Overridden getter for cost to reflect premium price
+        @Override
+        public double getCost() {
+            return this.isAdded() ? this.premiumCost : 0.00;
         }
     }
 
@@ -168,14 +210,36 @@ public class IceCreamIsland {
         }
     }
 
+    // VIPCustomer class that inherits Customer
+    static class VIPCustomer extends Customer {
+        // Constructor
+        public VIPCustomer(String name) {
+            super(name); // call parent constructor
+        }
+
+        // VIP customers earn double loyalty points
+        @Override
+        public void addPoints(int points) {
+            super.addPoints(points * 2);
+        }
+
+        // VIP customers can redeem 10% more value from loyalty points
+        @Override
+        public boolean redeemPoints(int points) {
+            return super.redeemPoints((int) (points * 0.9)); // 10% extra value for points
+        }
+    }
+
     // Main method
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        // Get customer name
+        // Get customer name and type (regular or VIP)
         System.out.print("Enter your name: ");
         String customerName = scanner.nextLine();
-        Customer customer = new Customer(customerName);
+        System.out.print("Are you a VIP customer? (yes/no): ");
+        String isVIP = scanner.nextLine();
+        Customer customer = isVIP.equalsIgnoreCase("yes") ? new VIPCustomer(customerName) : new Customer(customerName);
 
         // Get ice cream flavor and size from the user
         System.out.print("Enter the flavor of the ice cream: ");
@@ -196,83 +260,30 @@ public class IceCreamIsland {
                 scanner.nextLine(); // Consume newline
                 break;
             } catch (InputMismatchException e) {
-                System.out.println("Invalid input. Please enter a number.");
-                scanner.nextLine(); // Clear the invalid input
+                System.out.println("Please enter a valid number.");
+                scanner.nextLine(); // Consume invalid input
             }
         }
 
-        // Array of Topping objects
-        Topping[] toppings = new Topping[toppingCount];
-
-        // Get topping details from the user
+        // Loop to add toppings based on user input
         for (int i = 0; i < toppingCount; i++) {
-            System.out.print("Enter topping " + (i + 1) + ": ");
+            System.out.print("Enter the topping name: ");
             String toppingName = scanner.nextLine();
-            toppings[i] = new Topping(toppingName);
-            toppings[i].addTopping();
+
+            System.out.print("Is this a premium topping? (yes/no): ");
+            String isPremium = scanner.nextLine();
+            Topping topping = isPremium.equalsIgnoreCase("yes") ? new PremiumTopping(toppingName) : new Topping(toppingName);
+            topping.addTopping();
         }
 
-        // Ask if the user wants to change the flavor
-        System.out.print("Do you want to change the flavor? (yes/no): ");
-        String changeFlavor = scanner.nextLine();
-        if (changeFlavor.equalsIgnoreCase("yes")) {
-            System.out.print("Enter the new flavor: ");
-            String newFlavor = scanner.nextLine();
-            myIceCream.setFlavor(newFlavor); // Using setter to change flavor
-        }
-
-        // Optionally remove a topping
-        System.out.print("Do you want to remove any topping? (yes/no): ");
-        String removeTopping = scanner.nextLine();
-        if (removeTopping.equalsIgnoreCase("yes")) {
-            System.out.print("Which topping do you want to remove? ");
-            String toppingToRemove = scanner.nextLine();
-            for (Topping topping : toppings) {
-                if (topping.getToppingName().equalsIgnoreCase(toppingToRemove)) {
-                    topping.removeTopping();
-                    break;
-                }
-            }
-        }
-
-        // Calculate the total cost
-        double totalCost = myIceCream.getCost();
-        for (Topping topping : toppings) {
-            totalCost += topping.getCost();
-        }
-
-        // Add loyalty points based on total cost
-        int earnedPoints = (int) (totalCost / 10);
-        customer.addPoints(earnedPoints);
-
-        // Ask if the user wants to redeem loyalty points
-        System.out.print("Do you want to redeem loyalty points? (yes/no): ");
+        // Redeem points if customer has enough loyalty points
+        System.out.print("Would you like to redeem loyalty points? (yes/no): ");
         String redeemChoice = scanner.nextLine();
-        double discount = 0.0;
         if (redeemChoice.equalsIgnoreCase("yes")) {
             System.out.print("Enter points to redeem: ");
             int pointsToRedeem = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
-            if (customer.redeemPoints(pointsToRedeem)) {
-                discount = pointsToRedeem; // Each point is worth Rs1 discount
-                totalCost -= discount;
-            }
+            customer.redeemPoints(pointsToRedeem);
         }
-
-        // Display order summary
-        System.out.println("\nOrder Summary:");
-        System.out.println("Customer: " + customer.getName());
-        System.out.println("Ice Cream: " + myIceCream.getFlavor() + " (" + myIceCream.getSize() + ")");
-        System.out.println("Toppings:");
-        for (Topping topping : toppings) {
-            if (topping.isAdded()) {
-                System.out.println("- " + topping.getToppingName());
-            }
-        }
-        System.out.println("Total Cost: Rs" + totalCost);
-        System.out.println("Discount from Loyalty Points: Rs" + discount);
-        System.out.println("Total Ice Creams Sold: " + IceCream.getTotalIceCreamsSold());
-        System.out.println("Total Loyalty Points Redeemed: " + Customer.getTotalLoyaltyPointsRedeemed());
 
         scanner.close();
     }
