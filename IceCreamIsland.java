@@ -1,4 +1,4 @@
-import java.util.Scanner;
+import java.util.*;
 
 
 abstract class IceCream {
@@ -194,26 +194,52 @@ public class IceCreamIsland {
                 ? new SpecialIceCream(flavor, size, "Chocolate Chips")
                 : new RegularIceCream(flavor, size);
 
-        System.out.print("Do you want to add a regular topping? (yes/no): ");
-        String addTopping = scanner.nextLine();
+        // List to store chosen toppings
+        List<Topping> chosenToppings = chooseToppings(scanner);
 
-        Topping topping = addTopping.equalsIgnoreCase("yes") ? new RegularTopping("Sprinkles") : null;
+        // Calculate total cost including toppings
+        double totalCost = iceCream.calculateCost();
+        StringBuilder description = new StringBuilder(iceCream.describe());
 
-        String output = iceCream.describe();
-        if (topping != null) {
-            output += "\n" + topping.addTopping();
-            output += "\nTotal cost with topping: Rs" + (iceCream.calculateCost() + topping.getCost());
-        } else {
-            output += "\nTotal cost: Rs" + iceCream.calculateCost();
+        // Add each chosen topping to the description and total cost
+        for (Topping topping : chosenToppings) {
+            description.append("\n").append(topping.addTopping());
+            totalCost += topping.getCost();
         }
 
-        System.out.println(output);
+        // Display final description and cost
+        description.append("\nTotal cost with toppings: Rs").append(totalCost);
+        System.out.println(description);
         System.out.println("Total Customers: " + Customer.getTotalCustomers());
 
         scanner.close();
     }
-     // New method to get the topping (Dependency Inversion Principle)
-     public static Topping getTopping(String choice) {
+
+    // Method to choose multiple toppings (Open-Closed Principle)
+    public static List<Topping> chooseToppings(Scanner scanner) {
+        List<Topping> toppings = new ArrayList<>();
+        String choice;
+
+        while (true) {
+            System.out.print("Choose a topping (regular, premium) or type 'done' to finish: ");
+            choice = scanner.nextLine().toLowerCase();
+
+            if (choice.equals("done")) {
+                break;
+            }
+
+            Topping topping = getTopping(choice);
+            if (topping != null) {
+                toppings.add(topping);
+            } else {
+                System.out.println("Invalid choice, please try again.");
+            }
+        }
+        return toppings;
+    }
+
+    // Factory method to get the appropriate Topping (Dependency Inversion Principle)
+    public static Topping getTopping(String choice) {
         switch (choice.toLowerCase()) {
             case "regular":
                 return new RegularTopping("Sprinkles");
