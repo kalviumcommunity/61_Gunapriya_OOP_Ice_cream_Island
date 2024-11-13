@@ -212,4 +212,15 @@ public class IceCreamIsland {
 
         scanner.close();
     }
+     // New method to get the topping (Dependency Inversion Principle)
+     public static Topping getTopping(String choice) {
+        switch (choice.toLowerCase()) {
+            case "regular":
+                return new RegularTopping("Sprinkles");
+            case "premium":
+                return new PremiumTopping("Chocolate Chips");
+            default:
+                return null;
+        }
+    }
 }
